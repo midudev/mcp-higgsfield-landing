@@ -1,11 +1,327 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Stage from '../components/Stage.astro';
+import Stop from '../components/Stop.astro';
+import ReserveButton from '../components/ReserveButton.astro';
+import Spiral from '../components/Spiral.astro';
+import Faq from '../components/Faq.astro';
+import Footer from '../components/Footer.astro';
+import { arko, hero, tagline, experiences, menu, rice, reserve, faq } from '../data/arko';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import vinos from '../assets/arko/6-vinos.jpg';
+import producto from '../assets/arko/photo-27.jpg';
+import MapaArko from '../assets/arko/mapa.svg';
+
+const title = 'Arko · Cocina nikkei en el Eixample, Barcelona';
+const description =
+  'Cocina japonesa con alma mediterránea en Carrer Enric Granados 63. Experiencias para 2 desde 150 €. Abierto todos los días de 13:00 a 00:00. Reserva tu mesa.';
+
+const { lat, lon } = arko.address;
+
+const restaurantSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: 'Arko',
+  url: 'https://www.arkorestaurant.com/es/',
+  telephone: '+34938299572',
+  servesCuisine: ['Nikkei', 'Japonesa'],
+  priceRange: '€€€',
+  acceptsReservations: arko.reserveUrl,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: arko.address.street,
+    postalCode: arko.address.postalCode,
+    addressLocality: arko.address.city,
+    addressCountry: 'ES',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: lat, longitude: lon },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '13:00',
+      closes: '23:59',
+    },
+  ],
+  sameAs: [arko.instagram.href],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
+const taglineWords = tagline.text.split(' ');
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(restaurantSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <Header />
+
+  <main id="contenido">
+    <div class="world" data-world>
+      <Stage />
+
+      <div class="world-copy relative z-10">
+        <!-- 0. La entrada -->
+        <Stop id="entrada" index={0} class="items-end pt-24 pb-6 lg:pb-16">
+          <p class="mt-6 text-xs font-medium tracking-widest text-teja uppercase">{hero.eyebrow}</p>
+          <h1
+            id="entrada-title"
+            class="hero-heading mt-4 pb-2 text-4xl sm:text-5xl xl:text-6xl 2xl:text-7xl"
+          >
+            {hero.title[0]}<br />
+            {hero.title[1]}
+          </h1>
+          <p class="mt-4 max-w-md text-base text-cream/80 sm:text-lg">{hero.subtitle}</p>
+          <div class="mt-8 flex flex-wrap items-center gap-6" data-hero-cta>
+            <ReserveButton label={hero.cta} />
+            <p class="hero-cue hidden items-center gap-3 text-sm text-cream/70 lg:flex" aria-hidden="true">
+              <span class="hero-cue-line relative block h-8 w-px overflow-hidden bg-cream/20"></span>
+              {hero.scrollCue}
+            </p>
+          </div>
+          <dl class="mt-8 grid gap-2 text-sm sm:mt-12 sm:grid-cols-3 sm:gap-6">
+            {hero.facts.map((fact) => (
+              <div class="flex justify-between gap-4 sm:flex-col sm:justify-start sm:gap-1">
+                <dt class="text-cream/60">{fact.label}</dt>
+                <dd class="text-right text-cream tabular-nums sm:text-left">{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </Stop>
+
+        <!-- 1. Los espejos: la frase que se enciende palabra a palabra -->
+        <Stop id="local" index={1} class="items-center py-24">
+          <h2
+            id="local-title"
+            class="mt-6 max-w-[680px] text-4xl sm:text-5xl xl:text-6xl"
+            data-tagline
+          >
+            {taglineWords.map((word, i) => (
+              <>
+                <span class="tagline-word">{word}</span>
+                {i < taglineWords.length - 1 && ' '}
+              </>
+            ))}
+          </h2>
+          <p class="mt-8 max-w-md text-base text-cream/70 sm:text-lg" data-reveal>{tagline.coda}</p>
+        </Stop>
+
+        <!-- 2. La mesa especial: experiencias para dos -->
+        <Stop id="experiencias" index={2} class="items-center py-24">
+          <h2 id="experiencias-title" class="mt-4 text-4xl sm:text-5xl xl:text-6xl">
+            {experiences.title}
+          </h2>
+          <p class="mt-4 text-base text-cream/70 sm:text-lg">{experiences.intro}</p>
+          <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+            {experiences.items.map((item, i) => (
+              <li
+                class="flex flex-col rounded-2xl border border-cream/15 bg-ink/60 p-6"
+                data-reveal
+                style={`--reveal-delay: ${i * 120}ms`}
+              >
+                <h3 class="text-xl font-semibold">{item.name}</h3>
+                <p class="mt-2 text-base text-cream/70">{item.detail}</p>
+                <p class="mt-6 flex items-baseline gap-2">
+                  <span class="font-display text-4xl text-cream">{item.price}</span>
+                  <span class="text-sm text-cream/70">{item.per}</span>
+                </p>
+              </li>
+            ))}
+          </ul>
+          <div class="mt-4 flex items-center gap-6 rounded-2xl border border-cream/15 bg-ink/60 p-4" data-reveal>
+            <Picture
+              src={vinos}
+              widths={[96, 192]}
+              width={192}
+              sizes="64px"
+              formats={['avif', 'webp']}
+              alt="El pasillo de las vitrinas de vino de Arko, con una puerta de espejo al fondo"
+              class="h-24 w-16 shrink-0 rounded-full object-cover"
+            />
+            <div>
+              <h3 class="flex items-baseline gap-2 text-lg font-semibold">
+                {experiences.pairing.name}
+                <span class="font-display text-xl text-teja">{experiences.pairing.price}</span>
+              </h3>
+              <p class="mt-1 text-sm text-cream/70">{experiences.pairing.detail}</p>
+            </div>
+          </div>
+          <a
+            href={arko.giftUrl}
+            target="_blank"
+            rel="noopener"
+            class="mt-8 inline-flex items-center gap-2 rounded-full text-base font-semibold text-teja underline-offset-4 transition-colors duration-700 ease-heavy hover:text-teja-soft hover:underline"
+          >
+            {experiences.gift}
+            <svg viewBox="0 0 256 256" class="size-4" aria-hidden="true" fill="currentColor">
+              <path
+                d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"
+              ></path>
+            </svg>
+            <span class="sr-only">(se abre en una pestaña nueva)</span>
+          </a>
+        </Stop>
+
+        <!-- 3. El comedor: la carta -->
+        <Stop id="carta" index={3} class="items-center py-24">
+          <h2 id="carta-title" class="mt-4 text-4xl sm:text-5xl xl:text-6xl">
+            {menu.title}
+          </h2>
+          <p class="mt-4 text-base text-cream/70 sm:text-lg">{menu.intro}</p>
+          <ol class="mt-8 flex flex-col gap-6">
+            {menu.dishes.map((dish, i) => (
+              <li class="flex items-center gap-6" data-reveal style={`--reveal-delay: ${i * 80}ms`}>
+                <Picture
+                  src={dish.image}
+                  widths={[128, 256, 384]}
+                  width={384}
+                  sizes="(min-width: 1024px) 128px, 112px"
+                  formats={['avif', 'webp']}
+                  alt={dish.alt}
+                  class="aspect-[3/4] w-28 shrink-0 rounded-t-full object-cover lg:w-32"
+                />
+                <div>
+                  <h3 class="text-lg font-semibold sm:text-xl">{dish.name}</h3>
+                  {dish.detail && <p class="mt-1 text-base text-cream/70">{dish.detail}</p>}
+                </div>
+              </li>
+            ))}
+          </ol>
+          <div class="mt-8">
+            <ReserveButton />
+          </div>
+        </Stop>
+
+        <!-- 4. La barra: el arroz y el producto -->
+        <Stop id="arroz" index={4} class="items-center py-24">
+          <h2 id="arroz-title" class="mt-4 text-4xl sm:text-5xl xl:text-6xl">
+            {rice.title}
+          </h2>
+          <p class="mt-4 max-w-lg text-base text-cream/70 sm:text-lg">{rice.body}</p>
+          <!-- La lista marca la altura; la foto la ocupa entera -->
+          <div class="mt-8 grid gap-8 sm:grid-cols-2 sm:gap-6">
+            <div class="relative aspect-[4/5] overflow-hidden rounded-t-full sm:aspect-auto" data-reveal>
+              <Picture
+                src={producto}
+                widths={[320, 480, 640]}
+                width={640}
+                sizes="(min-width: 1024px) 336px, (min-width: 640px) 45vw, 90vw"
+                formats={['avif', 'webp']}
+                alt="Caja de madera con el producto crudo: atún, ventresca, salmón, lubina, anguila, carabinero, vieiras y wasabi fresco"
+                class="absolute inset-0 size-full object-cover"
+              />
+            </div>
+            <ul class="flex flex-col justify-between gap-8 sm:py-6">
+              {rice.facts.map((fact, i) => (
+                <li data-reveal style={`--reveal-delay: ${i * 120}ms`}>
+                  <p class="font-display text-4xl text-teja">{fact.value}</p>
+                  <p class="mt-1 max-w-xs text-sm text-cream/70">{fact.label}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Stop>
+
+        <!-- 5. El reservado de mimbre: reserva final -->
+        <Stop id="reserva" index={5} class="items-center py-24">
+          <h2 id="reserva-title" class="mt-4 text-4xl sm:text-5xl xl:text-6xl">
+            {reserve.title}
+          </h2>
+          <p class="mt-4 text-base text-cream/70 sm:text-lg">{reserve.body}</p>
+          <div class="mt-8" data-final-cta>
+            <ReserveButton />
+          </div>
+          <dl class="mt-8 grid gap-6 sm:grid-cols-3">
+            <div>
+              <dt class="text-sm text-cream/70">Dirección</dt>
+              <dd class="mt-1 text-base">
+                <a
+                  href={arko.address.mapsUrl}
+                  target="_blank"
+                  rel="noopener"
+                  class="underline decoration-cream/30 underline-offset-4 transition-colors duration-700 ease-heavy hover:decoration-teja"
+                >
+                  {arko.address.street}<br />{arko.address.postalCode} {arko.address.city}
+                  <span class="sr-only">(abre Google Maps en una pestaña nueva)</span>
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt class="text-sm text-cream/70">Horario</dt>
+              <dd class="mt-1 text-base tabular-nums">
+                {arko.hours.label}<br />{arko.hours.open} a {arko.hours.close}
+              </dd>
+            </div>
+            <div>
+              <dt class="text-sm text-cream/70">Teléfono</dt>
+              <dd class="mt-1">
+                <a
+                  href={arko.phone.href}
+                  class="text-base tabular-nums underline decoration-cream/30 underline-offset-4 transition-colors duration-700 ease-heavy hover:decoration-teja"
+                >
+                  {arko.phone.label}
+                </a>
+              </dd>
+            </div>
+          </dl>
+          <figure class="mt-8">
+            <a
+              href={arko.address.mapsUrl}
+              target="_blank"
+              rel="noopener"
+              class="map-link group relative block aspect-square overflow-hidden rounded-2xl border border-cream/15 bg-ink sm:aspect-[16/9]"
+            >
+              <MapaArko class="map-svg size-full" aria-hidden="true" />
+              <span
+                class="absolute right-4 bottom-4 inline-flex items-center gap-2 rounded-full bg-ink/80 px-3 py-2 text-sm font-medium text-cream backdrop-blur-md transition-colors duration-700 ease-heavy group-hover:text-teja-soft"
+              >
+                Cómo llegar<span class="sr-only"> a Arko, Carrer Enric Granados 63 (abre Google Maps en una pestaña nueva)</span>
+                <svg viewBox="0 0 256 256" class="size-4" aria-hidden="true" fill="currentColor">
+                  <path
+                    d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"
+                  ></path>
+                </svg>
+              </span>
+            </a>
+            <figcaption class="mt-2 text-xs text-cream/40">
+              Datos del mapa: <a href="https://www.openstreetmap.org/copyright" class="underline-offset-2 hover:underline">© OpenStreetMap</a>
+            </figcaption>
+          </figure>
+          <p class="mt-12 font-display text-4xl sm:text-5xl" data-reveal>{reserve.closing}</p>
+        </Stop>
+      </div>
+    </div>
+
+    <Spiral rings={9} class="mx-auto my-16 size-24 text-cream/20" />
+
+    <Faq />
+  </main>
+
+  <Footer />
+
+  <!-- Reservar al alcance del pulgar en móvil -->
+  <div
+    class="mobile-cta pointer-events-none fixed inset-x-0 bottom-6 z-30 flex translate-y-24 justify-center opacity-0 transition-[transform,opacity] duration-700 ease-heavy lg:hidden"
+    data-mobile-cta
+  >
+    <ReserveButton class="pointer-events-auto shadow-lg shadow-black/40" />
+  </div>
 </Layout>
+
+<script>
+  import { initPage } from '../scripts/world';
+  initPage();
+</script>

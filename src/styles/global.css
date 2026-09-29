@@ -1,0 +1,390 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* Hina Mincho (titulares): un Mincho japonés fino, de trazo casi caligráfico.
+   Zen Kaku Gothic New (texto): gótica japonesa limpia. Las dos de Google Fonts
+   (SIL Open Font License), servidas desde aquí y solo con el subconjunto latino. */
+@font-face {
+  font-family: "Hina Mincho";
+  src: url("/fonts/hina-mincho-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Zen Kaku Gothic New";
+  src: url("/fonts/zen-kaku-gothic-new-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Zen Kaku Gothic New";
+  src: url("/fonts/zen-kaku-gothic-new-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Zen Kaku Gothic New";
+  src: url("/fonts/zen-kaku-gothic-new-700.woff2") format("woff2");
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-ink: #131209;
+  --color-cream: #f3eadb;
+  --color-teja: #d0703a;
+  --color-teja-soft: #e08a55;
+  --color-indigo: #27365a;
+
+  --font-sans: "Zen Kaku Gothic New", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Hina Mincho", ui-serif, Georgia, serif;
+
+  --ease-heavy: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  /* Titulares en Hina Mincho. Solo tiene un peso: nada de negritas sintéticas. */
+  h1,
+  h2,
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-synthesis: none;
+    letter-spacing: 0.01em;
+  }
+
+  p,
+  li,
+  dd,
+  summary {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-teja);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-teja);
+    outline-offset: 4px;
+  }
+}
+
+/* Encabezado del hero: el único degradado, y solo sobre texto (skill B5),
+   en los tonos del yeso del local. */
+.hero-heading {
+  background: linear-gradient(90deg, #fbf5ea, #c8b596);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Entrada pesada al hacer scroll (skill B7). Solo se oculta con JS activo. */
+.js [data-reveal] {
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(4rem);
+  transition:
+    opacity 1000ms var(--ease-heavy),
+    filter 1000ms var(--ease-heavy),
+    transform 1000ms var(--ease-heavy);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal].is-in {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+}
+
+/* Frase que se enciende palabra a palabra (skill B11). */
+.tagline-word {
+  color: color-mix(in srgb, var(--color-cream) 35%, transparent);
+  transition: color 700ms var(--ease-heavy);
+}
+
+.tagline-word.is-lit,
+.no-js .tagline-word {
+  color: var(--color-cream);
+}
+
+/* Recorrido: en móvil el escenario queda de fondo y el texto pasa por encima;
+   en escritorio, texto a la izquierda y escenario fijo a la derecha. */
+.world {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.world > .world-stage,
+.world > .world-copy {
+  grid-area: 1 / 1;
+}
+
+.world-stage {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100svh;
+}
+
+.stage-frame {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-ink);
+}
+
+.stage-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stage-layer img,
+.stage-layer video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stage-layer[data-tour] {
+  opacity: 0;
+}
+
+/* Ambilight: solo en escritorio (en móvil el vídeo ya ocupa toda la pantalla).
+   Es el mismo fotograma del arco en un lienzo diminuto, con la misma proporción,
+   ampliado y centrado detrás: los colores de cada borde coinciden con los del vídeo. */
+.stage-ambient {
+  display: none;
+}
+
+/* Leyenda del escenario: en móvil, pegada bajo la cabecera y por encima del texto;
+   en escritorio, al pie del arco. Fundido al cambiar de texto y flecha solo en marcha. */
+.world > .world-caption {
+  grid-area: 1 / 1;
+  position: sticky;
+  top: 88px;
+  z-index: 20;
+  align-self: start;
+  justify-self: center;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Leyenda del escenario: fundido al cambiar de texto y flecha solo en marcha. */
+.caption-text {
+  transition:
+    opacity 450ms var(--ease-heavy),
+    filter 450ms var(--ease-heavy),
+    transform 450ms var(--ease-heavy);
+}
+
+.stage-caption.is-swapping .caption-text {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(4px);
+}
+
+.caption-arrow {
+  display: none;
+}
+
+.stage-caption.is-moving .caption-arrow {
+  display: block;
+}
+
+.caption-track {
+  transition: opacity 450ms var(--ease-heavy);
+}
+
+.stage-caption:not(.is-moving) .caption-track {
+  opacity: 0;
+}
+
+.caption-bar {
+  transform: scaleX(var(--progress, 0));
+}
+
+@media (min-width: 1024px) {
+  .world {
+    --stage-gap: 24px;
+    --stage-h: calc(100svh - var(--stage-gap));
+    --stage-w: calc(var(--stage-h) * 9 / 16);
+    grid-template-columns: minmax(0, 1fr) calc(var(--stage-w) + var(--stage-gap));
+  }
+
+  .world > .world-copy {
+    grid-area: 1 / 1;
+  }
+
+  .world > .world-caption {
+    grid-area: 1 / 2;
+    top: calc(100svh - 72px);
+    padding-right: var(--stage-gap);
+  }
+
+  .world {
+    overflow: clip;
+  }
+
+  .stage-ambient {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    width: 190%;
+    aspect-ratio: 9 / 16;
+    translate: -50% -50%;
+    opacity: 0.45;
+    filter: blur(28px);
+    /* Se funde con el fondo sin bordes: elipse que se apaga poco a poco. */
+    mask-image: radial-gradient(closest-side, #000 20%, rgb(0 0 0 / 0.55) 55%, rgb(0 0 0 / 0.18) 80%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .world > .world-stage {
+    grid-area: 1 / 2;
+    padding-top: var(--stage-gap);
+    padding-right: var(--stage-gap);
+  }
+
+  /* Arco arriba, como una puerta del local. */
+  .stage-frame {
+    width: var(--stage-w);
+    border-radius: 9999px 9999px 0 0;
+  }
+
+  .stage-arch-outline {
+    position: absolute;
+    inset: -8px -8px 0 -8px;
+    border: 1px solid color-mix(in srgb, var(--color-cream) 18%, transparent);
+    border-radius: 9999px 9999px 0 0;
+    pointer-events: none;
+  }
+}
+
+/* Botón de reservar con ondas de arena concéntricas. */
+.spiral-wrap .spiral-rings {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  transition:
+    opacity 700ms var(--ease-heavy),
+    transform 900ms var(--ease-heavy);
+}
+
+.spiral-wrap:hover .spiral-rings,
+.spiral-wrap:focus-within .spiral-rings {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* FAQ con apertura suave. */
+details.faq-item::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size 700ms var(--ease-heavy),
+    content-visibility 700ms allow-discrete;
+}
+
+details.faq-item[open]::details-content {
+  block-size: auto;
+}
+
+:root {
+  interpolate-size: allow-keywords;
+}
+
+/* Mapa SVG propio (datos de OpenStreetMap), en los tonos de la web. */
+.map-svg .map-street {
+  stroke: color-mix(in srgb, var(--color-cream) 9%, var(--color-ink));
+}
+
+.map-svg .map-street-major {
+  stroke: color-mix(in srgb, var(--color-cream) 15%, var(--color-ink));
+}
+
+.map-svg .map-park {
+  fill: color-mix(in srgb, var(--color-cream) 4%, var(--color-ink));
+}
+
+.map-svg .map-label {
+  fill: color-mix(in srgb, var(--color-cream) 55%, transparent);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+}
+
+.map-svg .map-pin circle {
+  stroke: var(--color-teja);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.map-svg .map-pin .map-pin-dot {
+  fill: var(--color-teja);
+  stroke: var(--color-cream);
+  stroke-width: 3;
+}
+
+.map-svg .map-pin-label {
+  fill: var(--color-cream);
+  font-family: var(--font-display);
+  font-size: 28px;
+}
+
+.map-link:hover .map-pin circle:not(.map-pin-dot) {
+  animation: map-ripple 1600ms var(--ease-heavy) infinite;
+}
+
+@keyframes map-ripple {
+  from {
+    transform: scale(0.85);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
+    filter: none;
+    transform: none;
+    transition: opacity 600ms var(--ease-heavy);
+  }
+
+  .spiral-wrap .spiral-rings {
+    transition: none;
+  }
+}

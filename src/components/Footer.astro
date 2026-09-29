@@ -1,0 +1,59 @@
+---
+import { arko } from '../data/arko';
+import Spiral from './Spiral.astro';
+import Logo from '../assets/arko/logo.svg';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="relative overflow-hidden bg-ink px-4 pt-16 pb-12 lg:px-16">
+  <Spiral
+    rings={12}
+    class="pointer-events-none absolute -right-24 -bottom-24 size-96 text-cream/5"
+  />
+  <div class="relative mx-auto grid max-w-6xl gap-12 md:grid-cols-[2fr_1fr_1fr]">
+    <div>
+      <Logo class="h-8 w-auto text-cream" role="img" aria-label="Arko" />
+      <p class="mt-2 max-w-xs text-base text-cream/70">Cocina japonesa con alma mediterránea, en el Eixample.</p>
+    </div>
+    <div class="text-base">
+      <p class="text-sm text-cream/70">Visítanos</p>
+      <p class="mt-2">{arko.address.street}<br />{arko.address.postalCode} {arko.address.city}</p>
+      <p class="mt-2 text-sm tabular-nums">{arko.hours.label}, {arko.hours.open} a {arko.hours.close}</p>
+    </div>
+    <div class="text-base">
+      <p class="text-sm text-cream/70">Contacto</p>
+      <ul class="mt-2 flex flex-col gap-2">
+        <li>
+          <a href={arko.phone.href} class="tabular-nums underline-offset-4 hover:text-teja-soft hover:underline">
+            {arko.phone.label}
+          </a>
+        </li>
+        <li>
+          <a
+            href={arko.instagram.href}
+            target="_blank"
+            rel="noopener"
+            class="underline-offset-4 hover:text-teja-soft hover:underline"
+          >
+            Instagram {arko.instagram.label}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    class="relative mx-auto mt-16 flex max-w-6xl flex-col gap-4 text-sm text-cream/70 md:flex-row md:items-center md:justify-between"
+  >
+    <p>© {year} Arko. El recorrido del local está animado con IA a partir de fotos reales.</p>
+    <nav aria-label="Legal">
+      <ul class="flex flex-wrap gap-x-6 gap-y-2">
+        {arko.legal.map((link) => (
+          <li>
+            <a href={link.href} class="underline-offset-4 hover:text-cream hover:underline">{link.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</footer>

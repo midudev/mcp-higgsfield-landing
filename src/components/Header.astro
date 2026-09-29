@@ -1,0 +1,116 @@
+---
+import ReserveButton from './ReserveButton.astro';
+import Logo from '../assets/arko/logo.svg';
+import { nav } from '../data/arko';
+---
+
+<header class="site-header pointer-events-none fixed inset-x-0 top-0 z-40">
+  <nav
+    aria-label="Principal"
+    class="pointer-events-auto relative z-10 mx-auto mt-6 flex w-max items-center gap-2 rounded-full bg-ink/70 p-2 pl-4 backdrop-blur-xl lg:mx-0 lg:ml-10"
+  >
+    <a
+      href="#entrada"
+      class="flex h-8 items-center rounded-full px-2 text-cream transition-colors duration-700 ease-heavy hover:text-teja-soft"
+      aria-label="Arko, volver al inicio"
+      data-nav-link
+    >
+      <Logo class="h-4 w-auto" aria-hidden="true" />
+    </a>
+    <ReserveButton size="sm" label="Reservar" />
+    <button
+      type="button"
+      class="relative grid size-10 place-items-center rounded-full text-cream transition-colors duration-700 ease-heavy hover:bg-cream/10 active:scale-[0.98]"
+      aria-expanded="false"
+      aria-controls="menu"
+      data-menu-toggle
+    >
+      <span class="sr-only" data-menu-label>Abrir menú</span>
+      <span
+        class="menu-line menu-line-a absolute h-0.5 w-4 -translate-y-1 rounded-full bg-current transition-transform duration-700 ease-heavy"
+      ></span>
+      <span
+        class="menu-line menu-line-b absolute h-0.5 w-4 translate-y-1 rounded-full bg-current transition-transform duration-700 ease-heavy"
+      ></span>
+    </button>
+  </nav>
+
+  <div
+    id="menu"
+    class="menu-overlay pointer-events-none fixed inset-0 grid place-items-center bg-black/80 opacity-0 backdrop-blur-3xl transition-opacity duration-700 ease-heavy"
+    data-menu
+    inert
+  >
+    <ul class="flex flex-col items-center gap-4 text-center">
+      {nav.map((item, i) => (
+        <li
+          class="menu-item translate-y-12 opacity-0 transition-[transform,opacity] duration-700 ease-heavy"
+          style={`transition-delay: ${100 + i * 50}ms`}
+        >
+          <a
+            href={item.href}
+            class="rounded-full px-3 py-2 font-display text-5xl text-cream/70 transition-colors duration-700 ease-heavy hover:text-cream aria-[current=true]:text-cream"
+            data-nav-link
+          >
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</header>
+
+<style>
+  .site-header.is-open .menu-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .site-header.is-open .menu-item {
+    transform: none;
+    opacity: 1;
+  }
+
+  .menu-line {
+    transition-property: transform, translate;
+  }
+
+  .site-header.is-open .menu-line {
+    translate: 0 0;
+  }
+
+  .site-header.is-open .menu-line-a {
+    transform: rotate(45deg);
+  }
+
+  .site-header.is-open .menu-line-b {
+    transform: rotate(-45deg);
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('.site-header');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = header?.querySelector<HTMLElement>('[data-menu]');
+  const label = header?.querySelector<HTMLElement>('[data-menu-label]');
+
+  function setOpen(open: boolean) {
+    if (!header || !toggle || !menu || !label) return;
+    header.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    label.textContent = open ? 'Cerrar menú' : 'Abrir menú';
+    menu.inert = !open;
+    document.dispatchEvent(new CustomEvent('arko:menu', { detail: { open } }));
+  }
+
+  toggle?.addEventListener('click', () => setOpen(!header?.classList.contains('is-open')));
+  menu?.addEventListener('click', (event) => {
+    if ((event.target as HTMLElement).closest('a')) setOpen(false);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && header?.classList.contains('is-open')) {
+      setOpen(false);
+      toggle?.focus();
+    }
+  });
+</script>

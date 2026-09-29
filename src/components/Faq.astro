@@ -1,0 +1,41 @@
+---
+import { faq } from '../data/arko';
+---
+
+<section id="preguntas" aria-labelledby="preguntas-title" class="mx-auto max-w-3xl scroll-mt-24 px-4 pb-24">
+  <h2 id="preguntas-title" class="text-4xl sm:text-5xl" data-reveal>
+    Preguntas frecuentes
+  </h2>
+  <div class="mt-8 flex flex-col gap-2">
+    {faq.map((item) => (
+      <details class="faq-item group rounded-2xl bg-[#1F1F1F]" data-reveal>
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl p-6 text-lg font-semibold transition-colors duration-700 ease-heavy hover:text-teja-soft [&::-webkit-details-marker]:hidden">
+          {item.q}
+          <svg
+            viewBox="0 0 256 256"
+            class="size-5 shrink-0 text-teja transition-transform duration-700 ease-heavy group-open:rotate-45"
+            aria-hidden="true"
+            fill="currentColor"
+          >
+            <!-- Phosphor: plus (regular) -->
+            <path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z" />
+          </svg>
+        </summary>
+        <div class="px-6 pb-6 text-base text-cream/70">
+          <p>{item.a}</p>
+          {item.link && (
+            <a
+              href={item.link.href}
+              target="_blank"
+              rel="noopener"
+              class="mt-4 inline-flex rounded-full font-semibold text-teja underline-offset-4 hover:underline"
+            >
+              {item.link.label}
+              <span class="sr-only">(se abre en una pestaña nueva)</span>
+            </a>
+          )}
+        </div>
+      </details>
+    ))}
+  </div>
+</section>

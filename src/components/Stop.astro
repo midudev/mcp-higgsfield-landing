@@ -1,0 +1,28 @@
+---
+// Un bloque de texto del recorrido. En móvil va en una tarjeta oscura
+// semitransparente sobre el vídeo; en escritorio, directamente sobre el fondo.
+// La cámara viaja de un bloque al siguiente: cada tramo empieza cuando el centro
+// de este bloque pasa por el centro de la pantalla y acaba con el del siguiente.
+interface Props {
+  id: string;
+  index: number;
+  class?: string;
+}
+
+const { id, index, class: className = '' } = Astro.props;
+const number = String(index + 1).padStart(2, '0');
+---
+
+<section
+  id={id}
+  data-stop={index}
+  aria-labelledby={`${id}-title`}
+  class:list={['relative z-10 flex min-h-svh scroll-mt-24 px-4 lg:px-16', className]}
+>
+  <div
+    class="stop-card w-full max-w-xl rounded-3xl bg-ink/80 p-6 backdrop-blur-md lg:max-w-2xl lg:rounded-none lg:bg-transparent lg:p-0 lg:backdrop-blur-none"
+  >
+    <p class="font-display text-xl text-teja" aria-hidden="true">{number}</p>
+    <slot />
+  </div>
+</section>

@@ -1,0 +1,78 @@
+---
+import { Picture } from 'astro:assets';
+import { stops, tour } from '../data/arko';
+---
+
+<div class="world-stage z-0" data-stage>
+  <div class="relative h-full lg:w-max">
+    <!-- Ambilight: el mismo fotograma que se ve en el arco, ampliado y difuminado detrás -->
+    <canvas class="stage-ambient" width="36" height="64" data-ambient aria-hidden="true"></canvas>
+    <div class="stage-arch-outline hidden lg:block" aria-hidden="true"></div>
+    <div class="stage-frame">
+      <video
+        class="stage-layer"
+        data-tour
+        data-src={tour.src}
+        data-src-mobile={tour.srcMobile}
+        muted
+        playsinline
+        preload="none"
+        disablepictureinpicture
+        tabindex="-1"
+        aria-hidden="true"
+      ></video>
+      {stops.map((stop, k) => (
+        <div class="stage-layer" data-stop-layer={k} style={k === 0 ? 'opacity: 1' : 'opacity: 0'} hidden={k > 0}>
+          <Picture
+            src={stop.still}
+            widths={[432, 640, 810, 1080]}
+            width={1080}
+            sizes="(min-width: 1024px) 57vh, 100vw"
+            formats={['avif', 'webp']}
+            quality={40}
+            alt={stop.alt}
+            loading={k === 0 ? 'eager' : 'lazy'}
+            fetchpriority={k === 0 ? 'high' : 'low'}
+            decoding="async"
+          />
+          {stop.cinemagraph && (
+            <video
+              data-cine
+              data-src={stop.cinemagraph}
+              muted
+              loop
+              playsinline
+              preload="none"
+              disablepictureinpicture
+              tabindex="-1"
+              aria-hidden="true"
+              style="opacity: 0"
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+<!-- Leyenda: dice dónde estás y, mientras la cámara viaja, hacia dónde vas.
+     Va aparte del escenario para quedar por encima del texto en móvil. -->
+<div class="world-caption" aria-hidden="true">
+  <div
+    class="stage-caption flex flex-col gap-1 rounded-full bg-ink/70 px-3 py-2 backdrop-blur-md"
+    data-stage-caption
+    aria-hidden="true"
+  >
+    <p class="caption-text flex items-center gap-2 text-xs font-medium tracking-wide whitespace-nowrap text-cream/90" data-caption-text>
+      <svg viewBox="0 0 256 256" class="caption-arrow size-3 text-teja" fill="currentColor">
+        <!-- Phosphor: arrow-right (bold) -->
+        <path
+          d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"
+        ></path>
+      </svg>
+      <span data-caption-label>{stops[0].label}</span>
+    </p>
+    <span class="caption-track h-0.5 w-full overflow-hidden rounded-full bg-cream/15">
+      <span class="caption-bar block h-full w-full origin-left bg-teja" data-caption-bar></span>
+    </span>
+  </div>
+</div>
