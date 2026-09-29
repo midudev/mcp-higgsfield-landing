@@ -1,0 +1,52 @@
+---
+import { Picture } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import ReserveButton from '../components/ReserveButton.astro';
+import vinos from '../assets/arko/6-vinos.jpg';
+import Logo from '../assets/arko/logo.svg';
+---
+
+<Layout title="Página no encontrada · Arko" description="Esta página no existe. Los vinos sí." noindex>
+  <header class="absolute inset-x-0 top-0 px-4 pt-6 lg:px-16">
+    <a
+      href="/"
+      class="inline-flex rounded-full p-2 text-cream transition-colors duration-700 ease-heavy hover:text-teja-soft"
+      aria-label="Arko, volver al inicio"
+    >
+      <Logo class="h-6 w-auto" aria-hidden="true" />
+    </a>
+  </header>
+  <main id="contenido" class="grid min-h-svh items-center px-4 py-24 lg:px-16">
+    <div class="mx-auto grid w-full max-w-5xl items-center gap-12 md:grid-cols-[auto_1fr]">
+      <Picture
+        src={vinos}
+        widths={[320, 480, 640]}
+        width={640}
+        sizes="(min-width: 768px) 320px, 240px"
+        formats={['avif', 'webp']}
+        alt="El pasillo de las vitrinas de vino de Arko, con una puerta de espejo al fondo"
+        loading="eager"
+        class="mx-auto aspect-[3/4] w-60 rounded-t-full object-cover md:w-80"
+      />
+      <div>
+        <p class="font-display text-xl text-teja" aria-hidden="true">404</p>
+        <h1 class="hero-heading mt-4 pb-2 text-5xl sm:text-6xl">
+          Esta página no existe.<br />
+          Los vinos sí.
+        </h1>
+        <p class="mt-6 max-w-md text-base text-cream/70 sm:text-lg">
+          El enlace que has seguido no lleva a ninguna parte. Vuelve al inicio o reserva directamente tu mesa.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-6">
+          <ReserveButton />
+          <a
+            href="/"
+            class="rounded-full text-base font-semibold text-cream underline-offset-4 transition-colors duration-700 ease-heavy hover:text-teja-soft hover:underline"
+          >
+            Volver al inicio
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
