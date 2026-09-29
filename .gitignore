@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# master clips from Higgsfield (plan B, too heavy for the repo)
+raw-video/
+
+# guion del vídeo (solo en local)
+GUION.md
