@@ -68,6 +68,10 @@
     text-wrap: balance;
   }
 
+  address {
+    font-style: normal;
+  }
+
   /* Titulares en Hina Mincho. Solo tiene un peso: nada de negritas sintéticas. */
   h1,
   h2,

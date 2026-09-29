@@ -4,6 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import ReserveButton from '../components/ReserveButton.astro';
 import vinos from '../assets/arko/6-vinos.jpg';
 import Logo from '../assets/arko/logo.svg';
+import { wines } from '../data/arko';
 ---
 
 <Layout title="Página no encontrada · Arko" description="Esta página no existe. Los vinos sí." noindex>
@@ -24,7 +25,7 @@ import Logo from '../assets/arko/logo.svg';
         width={640}
         sizes="(min-width: 768px) 320px, 240px"
         formats={['avif', 'webp']}
-        alt="El pasillo de las vitrinas de vino de Arko, con una puerta de espejo al fondo"
+        alt={wines.alt}
         loading="eager"
         class="mx-auto aspect-[3/4] w-60 rounded-t-full object-cover md:w-80"
       />

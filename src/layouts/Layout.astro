@@ -1,6 +1,4 @@
 ---
-import { getImage } from 'astro:assets';
-import ogSource from '../assets/arko/0-entrada.jpg';
 import '../styles/global.css';
 
 interface Props {
@@ -10,13 +8,16 @@ interface Props {
 }
 
 const { title, description, noindex = false } = Astro.props;
-const og = await getImage({ src: ogSource, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 80 });
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogUrl = new URL(og.src, Astro.site);
+const ogUrl = new URL('/og-image.jpg', Astro.site);
+const ogAlt = 'Arko: cocina japonesa con alma mediterránea, junto a la entrada del restaurante';
+const robots = noindex
+  ? 'noindex, follow'
+  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 ---
 
 <!doctype html>
-<html lang="es" class="no-js">
+<html lang="es-ES" class="no-js">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,10 +26,20 @@ const ogUrl = new URL(og.src, Astro.site);
     </script>
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <meta name="robots" content={robots} />
     <meta name="theme-color" content="#131209" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    {
+      !noindex && (
+        <>
+          <link rel="canonical" href={canonical} />
+          <link rel="alternate" hreflang="es-ES" href={canonical} />
+          <link rel="alternate" hreflang="x-default" href={canonical} />
+        </>
+      )
+    }
     <link rel="preload" href="/fonts/hina-mincho-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/zen-kaku-gothic-new-400.woff2" as="font" type="font/woff2" crossorigin />
 
@@ -39,13 +50,17 @@ const ogUrl = new URL(og.src, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:secure_url" content={ogUrl} />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="La entrada de Arko, con un cerezo en flor sobre la puerta" />
+    <meta property="og:image:alt" content={ogAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:url" content={canonical} />
     <meta name="twitter:image" content={ogUrl} />
+    <meta name="twitter:image:alt" content={ogAlt} />
     <slot name="head" />
   </head>
   <body class="bg-ink text-cream antialiased">

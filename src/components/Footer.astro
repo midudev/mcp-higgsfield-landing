@@ -1,5 +1,5 @@
 ---
-import { arko } from '../data/arko';
+import { arko, nav } from '../data/arko';
 import Spiral from './Spiral.astro';
 import Logo from '../assets/arko/logo.svg';
 
@@ -15,11 +15,32 @@ const year = new Date().getFullYear();
     <div>
       <Logo class="h-8 w-auto text-cream" role="img" aria-label="Arko" />
       <p class="mt-2 max-w-xs text-base text-cream/70">Cocina japonesa con alma mediterránea, en el Eixample.</p>
+      <nav aria-label="Secciones" class="mt-6">
+        <ul class="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+          {nav.map((item) => (
+            <li>
+              <a href={item.href} class="rounded-full underline-offset-4 hover:text-teja-soft hover:underline">
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </div>
     <div class="text-base">
       <p class="text-sm text-cream/70">Visítanos</p>
-      <p class="mt-2">{arko.address.street}<br />{arko.address.postalCode} {arko.address.city}</p>
-      <p class="mt-2 text-sm tabular-nums">{arko.hours.label}, {arko.hours.open} a {arko.hours.close}</p>
+      <address class="mt-2">
+        <a
+          href={arko.address.mapsUrl}
+          target="_blank"
+          rel="noopener"
+          class="rounded-sm underline-offset-4 hover:text-teja-soft hover:underline"
+        >
+          {arko.address.street}<br />{arko.address.postalCode} {arko.address.city}
+          <span class="sr-only">(abre Google Maps en una pestaña nueva)</span>
+        </a>
+        <p class="mt-2 text-sm tabular-nums">{arko.hours.label}, {arko.hours.open} a {arko.hours.close}</p>
+      </address>
     </div>
     <div class="text-base">
       <p class="text-sm text-cream/70">Contacto</p>

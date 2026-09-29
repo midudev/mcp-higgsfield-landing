@@ -8,63 +8,23 @@ import ReserveButton from '../components/ReserveButton.astro';
 import Spiral from '../components/Spiral.astro';
 import Faq from '../components/Faq.astro';
 import Footer from '../components/Footer.astro';
-import { arko, hero, tagline, experiences, menu, rice, reserve, faq } from '../data/arko';
+import { arko, hero, tagline, experiences, menu, rice, reserve, seo, wines } from '../data/arko';
+import { structuredData } from '../data/schema';
 
 import vinos from '../assets/arko/6-vinos.jpg';
 import producto from '../assets/arko/photo-27.jpg';
 import MapaArko from '../assets/arko/mapa.svg';
 
-const title = 'Arko · Cocina nikkei en el Eixample, Barcelona';
-const description =
-  'Cocina japonesa con alma mediterránea en Carrer Enric Granados 63. Experiencias para 2 desde 150 €. Abierto todos los días de 13:00 a 00:00. Reserva tu mesa.';
-
-const { lat, lon } = arko.address;
-
-const restaurantSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Restaurant',
-  name: 'Arko',
-  url: 'https://www.arkorestaurant.com/es/',
-  telephone: '+34938299572',
-  servesCuisine: ['Nikkei', 'Japonesa'],
-  priceRange: '€€€',
-  acceptsReservations: arko.reserveUrl,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: arko.address.street,
-    postalCode: arko.address.postalCode,
-    addressLocality: arko.address.city,
-    addressCountry: 'ES',
-  },
-  geo: { '@type': 'GeoCoordinates', latitude: lat, longitude: lon },
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-      opens: '13:00',
-      closes: '23:59',
-    },
-  ],
-  sameAs: [arko.instagram.href],
-};
-
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faq.map((item) => ({
-    '@type': 'Question',
-    name: item.q,
-    acceptedAnswer: { '@type': 'Answer', text: item.a },
-  })),
-};
+const site = Astro.site;
+if (!site) throw new Error('Falta site en astro.config.mjs');
+const jsonLd = JSON.stringify(structuredData(site)).replaceAll('<', '\\u003c');
 
 const taglineWords = tagline.text.split(' ');
 ---
 
-<Layout title={title} description={description}>
+<Layout title={seo.title} description={seo.description}>
   <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(restaurantSchema)} />
-    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    <script type="application/ld+json" set:html={jsonLd} />
   </Fragment>
 
   <Header />
@@ -76,13 +36,14 @@ const taglineWords = tagline.text.split(' ');
       <div class="world-copy relative z-10">
         <!-- 0. La entrada -->
         <Stop id="entrada" index={0} class="items-end pt-24 pb-6 lg:pb-16">
-          <p class="mt-6 text-xs font-medium tracking-widest text-teja uppercase">{hero.eyebrow}</p>
-          <h1
-            id="entrada-title"
-            class="hero-heading mt-4 pb-2 text-4xl sm:text-5xl xl:text-6xl 2xl:text-7xl"
-          >
-            {hero.title[0]}<br />
-            {hero.title[1]}
+          <h1 id="entrada-title" class="mt-6">
+            <span class="block font-sans text-xs font-medium tracking-widest text-teja uppercase">
+              {hero.eyebrow}
+            </span>
+            <span class="hero-heading mt-4 block pb-2 text-4xl sm:text-5xl xl:text-6xl 2xl:text-7xl">
+              {hero.title[0]}<br />
+              {hero.title[1]}
+            </span>
           </h1>
           <p class="mt-4 max-w-md text-base text-cream/80 sm:text-lg">{hero.subtitle}</p>
           <div class="mt-8 flex flex-wrap items-center gap-6" data-hero-cta>
@@ -148,7 +109,7 @@ const taglineWords = tagline.text.split(' ');
               width={192}
               sizes="64px"
               formats={['avif', 'webp']}
-              alt="El pasillo de las vitrinas de vino de Arko, con una puerta de espejo al fondo"
+              alt={wines.alt}
               class="h-24 w-16 shrink-0 rounded-full object-cover"
             />
             <div>
@@ -248,15 +209,17 @@ const taglineWords = tagline.text.split(' ');
             <div>
               <dt class="text-sm text-cream/70">Dirección</dt>
               <dd class="mt-1 text-base">
-                <a
-                  href={arko.address.mapsUrl}
-                  target="_blank"
-                  rel="noopener"
-                  class="underline decoration-cream/30 underline-offset-4 transition-colors duration-700 ease-heavy hover:decoration-teja"
-                >
-                  {arko.address.street}<br />{arko.address.postalCode} {arko.address.city}
-                  <span class="sr-only">(abre Google Maps en una pestaña nueva)</span>
-                </a>
+                <address>
+                  <a
+                    href={arko.address.mapsUrl}
+                    target="_blank"
+                    rel="noopener"
+                    class="underline decoration-cream/30 underline-offset-4 transition-colors duration-700 ease-heavy hover:decoration-teja"
+                  >
+                    {arko.address.street}<br />{arko.address.postalCode} {arko.address.city}
+                    <span class="sr-only">(abre Google Maps en una pestaña nueva)</span>
+                  </a>
+                </address>
               </dd>
             </div>
             <div>
