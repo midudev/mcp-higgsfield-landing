@@ -108,6 +108,9 @@ export const contacto = {
   instagram: '@arko.barcelona',
   horario: 'Lunes a domingo, de 13:00 a 00:00',
   cocina: 'Cocina hasta las 23:00',
+  // Del JSON-LD de arkorestaurant.com.
+  geo: { latitud: 41.3922, longitud: 2.1614 },
+  rangoPrecio: '€€€',
 };
 
 export const legal = [

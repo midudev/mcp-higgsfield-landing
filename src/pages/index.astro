@@ -13,6 +13,9 @@ import { faqs } from '../data/arko';
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
+  '@id': new URL('/#faq', Astro.site).href,
+  inLanguage: 'es-ES',
+  isPartOf: { '@id': new URL('/#website', Astro.site).href },
   mainEntity: faqs.map((faq) => ({
     '@type': 'Question',
     name: faq.pregunta,
@@ -22,8 +25,8 @@ const faqSchema = {
 ---
 
 <Layout
-  title="Arko · Cocina nikkei en el Eixample, Barcelona"
-  description="Cocina japonesa con alma mediterránea y herencia peruana en Enric Granados 63. Menús para dos desde 150 €. Todos los días de 13:00 a 00:00."
+  title="Arko · Sushi y cocina nikkei en el Eixample, Barcelona"
+  description="Restaurante japonés con alma mediterránea en Enric Granados 63, Barcelona. Sushi, nigiri y wagyu, con menús para dos desde 150 €. Abierto todos los días."
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <ScrollWorld />

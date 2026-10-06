@@ -4,7 +4,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import LogoSymbol from '../components/LogoSymbol.astro';
-import { contacto, links } from '../data/arko';
+import { contacto, experiencias, links } from '../data/arko';
 
 interface Props {
   title: string;
@@ -15,35 +15,72 @@ interface Props {
 
 const { title, description, noindex = false, header = true } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL('/og.jpg', Astro.site);
+const home = new URL('/', Astro.site).href;
+const ogImage = new URL('/og.jpg', Astro.site).href;
+const ogImageAlt = 'Comedor de Arko con un cerezo en flor bajo una bóveda blanca';
+const robots = noindex ? 'noindex' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 
-const restaurant = {
+// Un solo grafo: la web y el restaurante, enlazados por su @id. Las FAQ de la portada se suman desde index.astro.
+const schema = {
   '@context': 'https://schema.org',
-  '@type': 'Restaurant',
-  name: 'Arko Restaurant',
-  url: Astro.site?.href,
-  image: ogImage.href,
-  telephone: '+34938299572',
-  email: contacto.email,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: contacto.calle,
-    postalCode: '08008',
-    addressLocality: 'Barcelona',
-    addressCountry: 'ES',
-  },
-  servesCuisine: ['Japonesa', 'Nikkei'],
-  openingHoursSpecification: [
+  '@graph': [
     {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-      opens: '13:00',
-      closes: '00:00',
+      '@type': 'WebSite',
+      '@id': `${home}#website`,
+      url: home,
+      name: 'Arko Restaurant',
+      inLanguage: 'es-ES',
+      publisher: { '@id': `${home}#restaurant` },
+    },
+    {
+      '@type': 'Restaurant',
+      '@id': `${home}#restaurant`,
+      name: 'Arko Restaurant',
+      description:
+        'Cocina japonesa con alma mediterránea y herencia peruana. Sushi, nigiri y cocina nikkei en el Eixample de Barcelona.',
+      url: home,
+      image: ogImage,
+      logo: new URL('/icon-512.png', Astro.site).href,
+      telephone: '+34938299572',
+      email: contacto.email,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: contacto.calle,
+        postalCode: '08008',
+        addressLocality: 'Barcelona',
+        addressRegion: 'Cataluña',
+        addressCountry: 'ES',
+      },
+      geo: { '@type': 'GeoCoordinates', latitude: contacto.geo.latitud, longitude: contacto.geo.longitud },
+      hasMap: links.maps,
+      servesCuisine: ['Japonesa', 'Nikkei', 'Mediterránea'],
+      priceRange: contacto.rangoPrecio,
+      openingHoursSpecification: [
+        {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+          opens: '13:00',
+          closes: '00:00',
+        },
+      ],
+      acceptsReservations: links.reservar,
+      potentialAction: {
+        '@type': 'ReserveAction',
+        target: { '@type': 'EntryPoint', urlTemplate: links.reservar, inLanguage: 'es' },
+        result: { '@type': 'FoodEstablishmentReservation', name: 'Reserva de mesa en Arko' },
+      },
+      hasMenu: links.carta,
+      makesOffer: experiencias.map((experiencia) => ({
+        '@type': 'Offer',
+        name: experiencia.nombre,
+        description: experiencia.descripcion,
+        price: Number.parseInt(experiencia.precio),
+        priceCurrency: 'EUR',
+        url: links.reservar,
+      })),
+      sameAs: [links.instagram, 'https://www.arkorestaurant.com/'],
     },
   ],
-  acceptsReservations: links.reservar,
-  hasMenu: links.carta,
-  sameAs: [links.instagram],
 };
 ---
 
@@ -55,29 +92,38 @@ const restaurant = {
     <script is:inline>document.documentElement.classList.add('js');</script>
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <meta name="robots" content={robots} />
+    {!noindex && <link rel="canonical" href={canonical} />}
     <meta name="theme-color" content="#131209" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <meta property="og:type" content="restaurant" />
+    <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_ES" />
     <meta property="og:site_name" content="Arko Restaurant" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Comedor de Arko con un cerezo en flor bajo una bóveda blanca" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    {/* Sin twitter:site: su web no enlaza ninguna cuenta de X y @arko.barcelona es su Instagram. */}
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <Font cssVariable="--font-hina" preload />
     <Font cssVariable="--font-zen" preload />
 
-    <script type="application/ld+json" set:html={JSON.stringify(restaurant)} />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
     <slot name="head" />
   </head>
   <body class="min-h-svh overflow-x-clip">
