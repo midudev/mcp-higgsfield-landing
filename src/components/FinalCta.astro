@@ -1,0 +1,36 @@
+---
+import { Picture } from 'astro:assets';
+import Spiral from './Spiral.astro';
+import { contacto, links, photos } from '../data/arko';
+---
+
+<section id="reservar" aria-labelledby="final-title" class="relative overflow-hidden px-4 py-24 md:px-12 xl:px-24">
+  <Spiral rings={12} class="pointer-events-none absolute right-0 bottom-0 w-[640px] translate-x-1/3 translate-y-1/3 text-crema/10" />
+  <div class="relative mx-auto flex max-w-[680px] flex-col items-center text-center">
+    <div data-reveal class="w-48 lg:w-56">
+      <Picture
+        src={photos.entrada}
+        alt="La puerta de Arko vista desde dentro, bajo un cerezo en flor"
+        formats={['avif', 'webp']}
+        widths={[320, 480]}
+        sizes="224px"
+        loading="lazy"
+        decoding="async"
+        pictureAttributes={{ class: 'block' }}
+        class="aspect-[3/4] w-full mask-arch object-cover"
+      />
+    </div>
+    <h2 id="final-title" data-reveal style="--d:100ms" class="mt-12 text-4xl lg:text-6xl">
+      Te esperamos en<br /> Enric Granados 63
+    </h2>
+    <p data-reveal style="--d:200ms" class="mt-6 text-base text-crema/70 lg:text-lg">
+      Todos los días, de 13:00 a 00:00. La cocina sirve hasta las 23:00.
+    </p>
+    <div data-reveal style="--d:300ms" class="mt-8 flex flex-col items-center gap-4">
+      <a href={links.reservar} class="btn btn-primary"><span>Reservar mesa</span></a>
+      <p class="text-sm text-crema/70">
+        O llámanos al <a href={links.telefono} class="link whitespace-nowrap">{contacto.telefono}</a>
+      </p>
+    </div>
+  </div>
+</section>

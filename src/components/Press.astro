@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+import Pending from './Pending.astro';
+import { prensa } from '../data/arko';
+---
+
+<section id="prensa" aria-labelledby="prensa-title" class="px-4 py-24 md:px-12 xl:px-24">
+  <figure class="mx-auto flex max-w-4xl flex-col items-center text-center">
+    <p id="prensa-title" data-reveal class="text-sm text-teja">Prensa</p>
+    <blockquote data-reveal style="--d:100ms" cite={prensa.url} class="mt-6">
+      <p class="font-display text-3xl lg:text-5xl">“{prensa.titular}”</p>
+      <p class="mx-auto mt-6 max-w-2xl text-base text-crema/70 lg:text-lg">{prensa.entradilla}</p>
+    </blockquote>
+    <figcaption data-reveal style="--d:200ms" class="mt-8 flex flex-col items-center gap-2 text-sm">
+      <span>{prensa.medio} · {prensa.fecha}</span>
+      <a href={prensa.url} class="link inline-flex items-center gap-2 text-crema/70" rel="noopener" target="_blank">
+        Leer el artículo
+        <Icon name="arrowUpRight" />
+      </a>
+    </figcaption>
+  </figure>
+  <Pending class="mx-auto mt-8 max-w-xl">Reseñas de Google: no están en su web, faltan nota y número de reseñas verificados.</Pending>
+</section>

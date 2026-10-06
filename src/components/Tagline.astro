@@ -1,0 +1,42 @@
+---
+import Spiral from './Spiral.astro';
+
+// Frase de su web, partida en líneas por donde se parte la idea.
+const lines = ['Sin concesiones:', 'técnica nipona,', 'ingredientes del mar y del mercado,', 'sabor de Barcelona.'];
+const text = lines.join(' ');
+---
+
+<section aria-label="Nuestra filosofía" class="relative overflow-hidden px-4 py-24 md:px-12 xl:px-24">
+  <Spiral
+    draw
+    rings={16}
+    class="pointer-events-none absolute top-1/2 left-1/2 w-[min(140vw,960px)] -translate-x-1/2 -translate-y-1/2 text-crema/10"
+  />
+  <div class="relative mx-auto flex min-h-[70svh] max-w-[680px] items-center justify-center">
+    <p class="sr-only">{text}</p>
+    <p data-words aria-hidden="true" class="font-display text-4xl text-balance lg:text-6xl">
+      {
+        lines.map((line) => (
+          <span class="block">
+            {line.split(' ').map((word) => (
+              <>
+                <span data-word class="word">{word}</span>{' '}
+              </>
+            ))}
+          </span>
+        ))
+      }
+    </p>
+  </div>
+</section>
+
+<style>
+  .word {
+    color: color-mix(in oklab, var(--color-crema) 30%, transparent);
+    transition: color 700ms var(--ease-fluid);
+  }
+
+  .word:global(.is-lit) {
+    color: var(--color-crema);
+  }
+</style>

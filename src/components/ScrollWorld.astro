@@ -1,0 +1,286 @@
+---
+import { Picture } from 'astro:assets';
+import Pending from './Pending.astro';
+import Stop from './Stop.astro';
+import { links, paseo } from '../data/arko';
+
+const { paradas } = paseo;
+const body = 'mt-4 max-w-md text-base text-crema/80 lg:text-lg';
+const title = 'mt-4 max-w-xl text-4xl lg:text-5xl xl:text-6xl';
+const pill = 'rounded-full bg-bg/40 px-3 py-1 ring-1 ring-crema/20 backdrop-blur-md';
+---
+
+<section id="recorrido" data-world aria-label="Paseo por Arko" class="relative">
+  <!-- Escenario fijo: los clips del paseo ocupan toda la pantalla. Debajo, el primer fotograma de cada clip, con el mismo
+       encuadre, para que el vídeo entre sin que se note el cambio. -->
+  <div data-stage class="sticky top-0 h-lvh overflow-hidden bg-bg" style="--focus-x: 50%">
+    <div aria-hidden="true" class="absolute inset-0">
+      {
+        paradas.map((parada, i) => (
+          <div data-frame class="frame absolute inset-0" style={i === 0 ? undefined : 'opacity: 0'}>
+            <Picture
+              src={parada.poster}
+              alt=""
+              formats={['avif', 'webp']}
+              widths={[828, 1280, 1920]}
+              sizes="(min-aspect-ratio: 16/9) 100vw, 178vh"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : 'low'}
+              decoding="async"
+              pictureAttributes={{ class: 'block size-full' }}
+              class="size-full object-cover"
+              style="object-position: var(--focus-x) 50%"
+            />
+          </div>
+        ))
+      }
+      <div class="clips absolute inset-0">
+        {
+          paradas.map((parada) => (
+            <video
+              data-clip
+              data-src={parada.clip}
+              muted
+              playsinline
+              preload="none"
+              disablepictureinpicture
+              disableremoteplayback
+              tabindex="-1"
+              class="clip absolute inset-0 size-full object-cover"
+            />
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Velos para leer el texto encima del vídeo. -->
+    <div aria-hidden="true" class="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-bg/60 to-transparent"></div>
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 bg-linear-to-t from-bg from-15% via-bg/50 via-50% to-transparent to-80% lg:bg-linear-to-r lg:from-bg/90 lg:via-bg/40 lg:via-35% lg:to-transparent lg:to-65%"
+    >
+    </div>
+    <div aria-hidden="true" class="absolute inset-x-0 bottom-0 hidden h-1/2 bg-linear-to-t from-bg/80 to-transparent lg:block"></div>
+
+    <!-- Raíl de paradas. -->
+    <nav aria-label="Paradas del paseo" class="absolute top-1/2 right-6 hidden -translate-y-1/2 lg:block xl:right-8">
+      <ol class="relative flex flex-col items-end gap-4">
+        <span aria-hidden="true" class="absolute top-3 right-1 bottom-3 w-px translate-x-1/2 bg-crema/20">
+          <span data-rail-fill class="absolute inset-0 origin-top scale-y-0 bg-teja"></span>
+        </span>
+        {
+          paradas.map((parada, i) => (
+            <li>
+              <a href={`#${parada.id}`} data-goto aria-current={i === 0 ? 'true' : 'false'} class="rail-link group flex h-6 items-center gap-3">
+                <span class="rail-label rounded-full bg-bg/60 px-3 py-1 text-xs whitespace-nowrap text-crema ring-1 ring-crema/10 backdrop-blur-xl">
+                  {parada.lugar}
+                </span>
+                <span class="relative grid size-2 place-items-center">
+                  <span class="rail-dot size-2 rounded-full bg-crema/50" />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <p
+      data-hint
+      aria-hidden="true"
+      class="absolute right-8 bottom-8 hidden items-center gap-3 text-xs tracking-widest text-crema/70 uppercase lg:flex"
+    >
+      Desliza para recorrer Arko
+      <span class="hint-line relative block h-8 w-px overflow-hidden bg-crema/20"></span>
+    </p>
+  </div>
+
+  <!-- Paradas: cada una deja su texto abajo a la izquierda mientras el paseo avanza. -->
+  <div class="relative z-10 -mt-[100lvh]">
+    <Stop index={0} eyebrow="Enric Granados 63 · Eixample, Barcelona" spy="#inicio">
+      <h1
+        class="hero-title mt-4 max-w-[680px] bg-linear-to-r from-crema to-[#b3a894] bg-clip-text pb-2 text-4xl text-transparent lg:text-6xl"
+      >
+        Cocina japonesa<br /> con alma mediterránea
+      </h1>
+      <p class={body}>
+        La disciplina japonesa dialoga con el producto mediterráneo y la herencia peruana. Cocina nikkei, todos los días
+        de 13:00 a 00:00.
+      </p>
+      <a href={links.reservar} class="btn btn-primary mt-6"><span>Reservar mesa</span></a>
+      <ul class="mt-6 flex flex-wrap gap-2 text-xs text-crema/80" aria-label="Nuestro producto">
+        <li class={pill}>Arroz Koshihikari</li>
+        <li class={pill}>Libre de anisakis</li>
+        <li class={pill}>Soja sin gluten</li>
+      </ul>
+    </Stop>
+
+    <Stop index={1} eyebrow="Qué es la cocina nikkei">
+      <h2 class={title}>Japón, Perú y el Mediterráneo en la misma mesa</h2>
+      <p class={body}>
+        La cocina nikkei nace del encuentro entre la precisión japonesa y la viveza de la cocina peruana. En Arko se le
+        suma el producto del mar y del mercado de Barcelona.
+      </p>
+      <p class="mt-4 max-w-md text-sm text-crema/60">
+        Nuestro equipo viaja a Japón con regularidad para elegir producto y aprender de los maestros.
+      </p>
+    </Stop>
+
+    <Stop index={2} eyebrow="Precio cerrado">
+      <h2 class={title}>Sabes lo que cuesta antes de sentarte</h2>
+      <p class={body}>Dos menús pensados para compartir entre dos personas, con el precio a la vista desde el principio.</p>
+      <dl class="mt-6 grid w-full max-w-md grid-cols-3 gap-4">
+        <div class="flex flex-col-reverse gap-1">
+          <dt class="text-xs text-crema/60">Short Experience</dt>
+          <dd class="font-display text-2xl lg:text-4xl">150 €</dd>
+        </div>
+        <div class="flex flex-col-reverse gap-1">
+          <dt class="text-xs text-crema/60">Full Experience</dt>
+          <dd class="font-display text-2xl lg:text-4xl">250 €</dd>
+        </div>
+        <div class="flex flex-col-reverse gap-1">
+          <dt class="text-xs text-crema/60">Maridaje</dt>
+          <dd class="font-display text-2xl lg:text-4xl">+100 €</dd>
+        </div>
+      </dl>
+      <a href="#experiencias" class="link mt-6 text-sm">Ver qué incluye cada menú</a>
+    </Stop>
+
+    <Stop index={3} eyebrow="Producto">
+      <h2 class={title}>Pescado crudo, con toda la tranquilidad</h2>
+      <p class={body}>
+        El salmón y el atún que servimos son 100 % libres de anisakis, sin antibióticos ni hormonas. Y toda la soja que
+        llega a la mesa es sin gluten.
+      </p>
+      <ul class="mt-6 grid w-full max-w-md grid-cols-2 gap-4">
+        <li class="flex flex-col gap-1 rounded-2xl bg-bg/40 p-4 ring-1 ring-crema/15 backdrop-blur-md">
+          <span class="font-display text-2xl lg:text-3xl">100 %</span>
+          <span class="text-xs text-crema/70 lg:text-sm">Salmón y atún libres de anisakis</span>
+        </li>
+        <li class="flex flex-col gap-1 rounded-2xl bg-bg/40 p-4 ring-1 ring-crema/15 backdrop-blur-md">
+          <span class="font-display text-2xl lg:text-3xl">Sin gluten</span>
+          <span class="text-xs text-crema/70 lg:text-sm">Toda la soja que servimos en sala</span>
+        </li>
+      </ul>
+    </Stop>
+
+    <Stop index={4} eyebrow="Nuestro shari">
+      <h2 class={title}>El arroz que lo cambia todo</h2>
+      <p class={body}>
+        Arroz Koshihikari, conocido por su aroma, aderezado con vinagre de arroz rojo de una casa japonesa fundada en
+        1937. El resultado tiene textura, sabor y color propios.
+      </p>
+      <div class="mt-6 flex items-end gap-4">
+        <span class="font-display text-5xl text-teja lg:text-7xl">1937</span>
+        <span class="max-w-48 pb-1 text-sm text-crema/70">Año de fundación de la casa de nuestro vinagre de arroz rojo</span>
+      </div>
+    </Stop>
+
+    <Stop index={5} eyebrow="Cómo funciona">
+      <h2 class={title}>Tu mesa, en tres pasos</h2>
+      <ol class="mt-6 flex max-w-md flex-col gap-4">
+        <li class="flex gap-4">
+          <span class="font-display text-2xl text-teja">1</span>
+          <div>
+            <h3 class="text-lg">Reserva online</h3>
+            <p class="text-sm text-crema/70">Elige día, hora y número de personas.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="font-display text-2xl text-teja">2</span>
+          <div>
+            <h3 class="text-lg">Ven a Enric Granados 63</h3>
+            <p class="text-sm text-crema/70">Abrimos todos los días de 13:00 a 00:00. La cocina sirve hasta las 23:00.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="font-display text-2xl text-teja">3</span>
+          <div>
+            <h3 class="text-lg">Elige cómo cenar</h3>
+            <p class="text-sm text-crema/70">A la carta o con una experiencia para dos, con maridaje si te apetece.</p>
+          </div>
+        </li>
+      </ol>
+      <Pending class="mt-4 max-w-md">¿Las experiencias se piden al reservar o en la mesa?</Pending>
+      <a href={links.reservar} class="btn btn-primary mt-6"><span>Reservar mesa</span></a>
+    </Stop>
+  </div>
+</section>
+
+<style>
+  .frame {
+    will-change: opacity, transform;
+  }
+
+  .clips {
+    opacity: 0;
+    transition: opacity 1200ms var(--ease-fluid);
+  }
+
+  [data-mode='video'] .clips {
+    opacity: 1;
+  }
+
+  /* Solo se ve el clip del tramo actual; el cambio entre clips es instantáneo porque comparten fotograma. */
+  .clip {
+    object-position: var(--focus-x) 50%;
+    visibility: hidden;
+  }
+
+  .clip.is-shown {
+    visibility: visible;
+  }
+
+  .rail-label {
+    opacity: 0;
+    transform: translateX(0.5rem);
+    transition:
+      opacity 700ms var(--ease-fluid),
+      transform 700ms var(--ease-fluid);
+  }
+
+  .rail-dot {
+    transition:
+      background-color 700ms var(--ease-fluid),
+      transform 700ms var(--ease-fluid);
+  }
+
+  .rail-link:hover .rail-label,
+  .rail-link:focus-visible .rail-label,
+  .rail-link[aria-current='true'] .rail-label {
+    opacity: 1;
+    transform: none;
+  }
+
+  .rail-link:hover .rail-dot {
+    background-color: var(--color-crema);
+  }
+
+  .rail-link[aria-current='true'] .rail-dot {
+    background-color: var(--color-teja);
+    transform: scale(1.5);
+  }
+
+  .hint-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-crema);
+    animation: hint 2400ms var(--ease-fluid) infinite;
+  }
+
+  @keyframes hint {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(100%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hint-line::after {
+      animation: none;
+    }
+  }
+</style>

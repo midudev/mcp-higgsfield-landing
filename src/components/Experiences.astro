@@ -1,0 +1,71 @@
+---
+import { Picture } from 'astro:assets';
+import Pending from './Pending.astro';
+import { experiencias, links, maridaje, photos } from '../data/arko';
+---
+
+<section id="experiencias" data-spy="#experiencias" aria-labelledby="exp-title" class="px-4 py-24 md:px-12 xl:px-24">
+  <div class="mx-auto max-w-6xl">
+    <div class="max-w-xl">
+      <p data-reveal class="text-sm text-teja">Experiencias para dos</p>
+      <h2 id="exp-title" data-reveal style="--d:100ms" class="mt-4 text-3xl lg:text-5xl">Dos menús, precio cerrado</h2>
+      <p data-reveal style="--d:200ms" class="mt-6 text-base text-crema/70 lg:text-lg">
+        Elige cuánto quieres recorrer de la carta. También puedes pedir a la carta.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-[1fr_1fr_0.9fr]">
+      {
+        experiencias.map((exp, i) => (
+          <article
+            data-reveal
+            style={`--d:${i * 100}ms`}
+            class:list={[
+              'relative flex flex-col rounded-3xl p-6 ring-1 lg:p-8',
+              exp.etiqueta ? 'ring-teja/60' : 'ring-crema/15',
+            ]}
+          >
+            {exp.etiqueta && (
+              <p class="absolute -top-3 left-6 rounded-full bg-teja px-3 py-1 text-xs font-medium text-bg lg:left-8">
+                {exp.etiqueta}
+              </p>
+            )}
+            <h3 class="text-2xl">{exp.nombre}</h3>
+            <p class="mt-2 text-base text-crema/70">{exp.descripcion}</p>
+            <p class="mt-8 flex items-baseline gap-2">
+              <span class="font-display text-5xl">{exp.precio}</span>
+              <span class="text-sm text-crema/50">para dos</span>
+            </p>
+            <p class="mt-1 text-sm text-crema/50">{exp.porPersona}</p>
+            <div class="mt-8 flex flex-1 items-end">
+              <a href={links.reservar} class="btn btn-primary"><span>Reservar mesa</span></a>
+            </div>
+          </article>
+        ))
+      }
+
+      <article data-reveal style="--d:200ms" class="flex flex-col items-center gap-6 rounded-3xl p-6 text-center ring-1 ring-crema/15 lg:p-8">
+        <div class="mirror-frame mask-oval w-40 lg:w-48">
+          <Picture
+            src={photos.vinos}
+            alt="Pasillo de vinotecas iluminadas bajo una bóveda blanca"
+            formats={['avif', 'webp']}
+            widths={[320, 480]}
+            sizes="192px"
+            loading="lazy"
+            decoding="async"
+            pictureAttributes={{ class: 'block' }}
+            class="aspect-[3/4] w-full mask-oval object-cover"
+          />
+        </div>
+        <div>
+          <h3 class="text-2xl">{maridaje.nombre}</h3>
+          <p class="mt-2 text-base text-crema/70">{maridaje.descripcion}</p>
+        </div>
+        <p class="font-display text-4xl">{maridaje.precio}</p>
+      </article>
+    </div>
+
+    <Pending class="mt-8 max-w-xl">¿Las experiencias se piden al reservar o en la mesa? Según la respuesta, el botón de cada tarjeta puede llevar ya el menú elegido.</Pending>
+  </div>
+</section>

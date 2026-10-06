@@ -1,0 +1,33 @@
+---
+// Espirales de arena rastrillada, como las de la barra de sushi.
+interface Props {
+  class?: string;
+  rings?: number;
+  draw?: boolean;
+}
+
+const { class: className = '', rings = 14, draw = false } = Astro.props;
+const size = 400;
+const c = size / 2;
+const step = (c - 8) / rings;
+
+// Anillos ligeramente irregulares, como surcos hechos a mano.
+const ring = (r: number, i: number) => {
+  const points = 72;
+  let d = '';
+  for (let p = 0; p <= points; p++) {
+    const a = (p / points) * Math.PI * 2;
+    const wobble = 1 + Math.sin(a * 3 + i * 0.7) * 0.012 + Math.cos(a * 5 + i) * 0.008;
+    const x = c + Math.cos(a) * r * wobble;
+    const y = c + Math.sin(a) * r * wobble;
+    d += `${p === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`;
+  }
+  return d + 'Z';
+};
+
+const paths = Array.from({ length: rings }, (_, i) => ring(step * (i + 1), i));
+---
+
+<svg viewBox={`0 0 ${size} ${size}`} fill="none" stroke="currentColor" class={className} aria-hidden="true" data-spiral-draw={draw ? '' : undefined}>
+  {paths.map((d) => <path d={d} pathLength="1" stroke-width="1" vector-effect="non-scaling-stroke" />)}
+</svg>

@@ -1,11 +1,37 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import ScrollWorld from '../components/ScrollWorld.astro';
+import Tagline from '../components/Tagline.astro';
+import Dishes from '../components/Dishes.astro';
+import Press from '../components/Press.astro';
+import Experiences from '../components/Experiences.astro';
+import Faq from '../components/Faq.astro';
+import Gift from '../components/Gift.astro';
+import FinalCta from '../components/FinalCta.astro';
+import { faqs } from '../data/arko';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.pregunta,
+    acceptedAnswer: { '@type': 'Answer', text: faq.respuesta },
+  })),
+};
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="Arko · Cocina nikkei en el Eixample, Barcelona"
+  description="Cocina japonesa con alma mediterránea y herencia peruana en Enric Granados 63. Menús para dos desde 150 €. Todos los días de 13:00 a 00:00."
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <ScrollWorld />
+  <Tagline />
+  <Dishes />
+  <Press />
+  <Experiences />
+  <Faq />
+  <Gift />
+  <FinalCta />
 </Layout>

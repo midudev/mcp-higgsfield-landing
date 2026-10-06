@@ -1,0 +1,17 @@
+---
+// Marca de contenido pendiente. Solo se renderiza en desarrollo.
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+const dev = import.meta.env.DEV;
+---
+
+{
+  dev && (
+    <p class:list={['rounded-xl px-3 py-2 text-xs text-teja ring-1 ring-teja/60', className]}>
+      <span class="font-medium">Pendiente:</span> <slot />
+    </p>
+  )
+}

@@ -1,0 +1,49 @@
+---
+import Icon from './Icon.astro';
+import Pending from './Pending.astro';
+import { links, platos } from '../data/arko';
+---
+
+<section id="carta" data-spy="#carta" aria-labelledby="carta-title" class="px-4 py-24 md:px-12 xl:px-24">
+  <div class="mx-auto max-w-6xl">
+    <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div class="max-w-xl">
+        <p data-reveal class="text-sm text-teja">Platos destacados</p>
+        <h2 id="carta-title" data-reveal style="--d:100ms" class="mt-4 text-3xl lg:text-5xl">Lo que llega a la mesa</h2>
+      </div>
+      <a
+        data-reveal
+        style="--d:200ms"
+        href={links.carta}
+        class="link inline-flex items-center gap-2 self-start text-sm md:self-auto"
+        rel="noopener"
+      >
+        Ver la carta completa
+        <Icon name="arrowUpRight" />
+      </a>
+    </div>
+
+    <Pending class="mt-8">
+      Fotos de platos: photo-01 a photo-27 no están en public/photos. Cada plato tiene su hueco ovalado listo.
+    </Pending>
+
+    <ol class="mt-12 divide-y divide-crema/10">
+      {
+        platos.map((plato, i) => (
+          <li data-reveal style={`--d:${i * 80}ms`} class="grid grid-cols-[auto_1fr] items-baseline gap-x-6 gap-y-1 py-6 md:grid-cols-[auto_1fr_auto] md:items-center lg:py-8">
+            <span class="font-display text-sm text-teja tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3 class="text-2xl lg:text-4xl">{plato.nombre}</h3>
+              {plato.detalle && <p class="mt-2 text-base text-crema/70">{plato.detalle}</p>}
+            </div>
+            {import.meta.env.DEV && (
+              <div class="col-start-2 mt-4 flex h-24 w-20 items-center justify-center mask-oval text-xs text-teja ring-1 ring-teja/60 md:col-start-3 md:mt-0">
+                Foto
+              </div>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

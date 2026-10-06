@@ -1,0 +1,37 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import { links, photos } from '../data/arko';
+---
+
+<section id="regala" aria-labelledby="regala-title" class="px-4 py-24 md:px-12 xl:px-24">
+  <div class="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
+    <div data-reveal class="mirror-frame mask-mirror mx-auto w-full max-w-sm">
+      <Picture
+        src={photos.mesaEspecial}
+        alt="Mesa redonda para dos con banco de piel bajo una lámpara cálida"
+        formats={['avif', 'webp']}
+        widths={[400, 640, 800]}
+        sizes="(min-width: 768px) 384px, 90vw"
+        loading="lazy"
+        decoding="async"
+        pictureAttributes={{ class: 'block' }}
+        class="aspect-[4/5] w-full mask-mirror object-cover"
+      />
+    </div>
+    <div>
+      <p data-reveal class="text-sm text-teja">Regala Arko</p>
+      <h2 id="regala-title" data-reveal style="--d:100ms" class="mt-4 text-3xl lg:text-5xl">El mejor regalo es una mesa</h2>
+      <p data-reveal style="--d:200ms" class="mt-6 max-w-md text-base text-crema/70 lg:text-lg">
+        Un voucher digital para vivir la Short o la Full Experience. Válido 12 meses, sin fecha fija, y llega por email al
+        momento.
+      </p>
+      <div data-reveal style="--d:300ms" class="mt-8">
+        <a href={links.regalar} class="btn btn-ghost" rel="noopener">
+          <Icon name="gift" class="size-5" />
+          <span>Regalar una experiencia</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,62 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { contacto, legal, links } from '../data/arko';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="px-4 pt-24 pb-12 md:px-12 xl:px-24">
+  <div class="grid gap-12 md:grid-cols-2 xl:grid-cols-4">
+    <div class="flex flex-col gap-4">
+      <Logo class="h-6 w-auto self-start text-crema" />
+      <p class="max-w-xs text-sm text-crema/70">Cocina japonesa con alma mediterránea en el Eixample de Barcelona.</p>
+    </div>
+
+    <div class="flex flex-col gap-2 text-sm">
+      <h2 class="font-sans text-xs tracking-widest text-crema/50 uppercase">Visítanos</h2>
+      <p>{contacto.calle}<br />{contacto.ciudad}</p>
+      <a href={links.maps} class="link inline-flex items-center gap-2 self-start" rel="noopener" target="_blank">
+        <Icon name="mapPin" />
+        Cómo llegar
+      </a>
+    </div>
+
+    <div class="flex flex-col gap-2 text-sm">
+      <h2 class="font-sans text-xs tracking-widest text-crema/50 uppercase">Horario</h2>
+      <p>{contacto.horario}</p>
+      <p class="text-crema/70">{contacto.cocina}</p>
+    </div>
+
+    <div class="flex flex-col gap-2 text-sm">
+      <h2 class="font-sans text-xs tracking-widest text-crema/50 uppercase">Contacto</h2>
+      <a href={links.telefono} class="link inline-flex items-center gap-2 self-start">
+        <Icon name="phone" />
+        {contacto.telefono}
+      </a>
+      <a href={links.email} class="link inline-flex items-center gap-2 self-start">
+        <Icon name="envelope" />
+        {contacto.email}
+      </a>
+      <a href={links.instagram} class="link inline-flex items-center gap-2 self-start" rel="noopener" target="_blank">
+        <Icon name="instagram" />
+        {contacto.instagram}
+      </a>
+    </div>
+  </div>
+
+  <div class="mt-16 flex flex-col gap-4 pt-8 text-xs text-crema/50 md:flex-row md:items-center md:justify-between">
+    <p>© {year} Arko Restaurant</p>
+    <ul class="flex flex-wrap gap-x-6 gap-y-2">
+      {
+        legal.map((item) => (
+          <li>
+            <a href={item.href} class="link" rel="noopener">
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</footer>
