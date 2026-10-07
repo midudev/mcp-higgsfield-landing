@@ -4,7 +4,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import LogoSymbol from '../components/LogoSymbol.astro';
-import { ogImage } from '../data/schema';
+import { ogImage } from '../data/imagenes';
 
 interface Props {
   title: string;
@@ -35,7 +35,8 @@ const robots = noindex
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     {
       !noindex && (
         <>
@@ -58,6 +59,7 @@ const robots = noindex
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={ogImage.alt} />
+    {/* Sin twitter:site: su web no enlaza ninguna cuenta de X y @arko.barcelona es su Instagram. */}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />

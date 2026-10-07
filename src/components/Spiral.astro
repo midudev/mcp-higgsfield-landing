@@ -11,16 +11,24 @@ const size = 400;
 const c = size / 2;
 const step = (c - 8) / rings;
 
-// Anillos ligeramente irregulares, como surcos hechos a mano.
+// Décimas de unidad sin el cero inicial (0.4 → .4) para que el path pese menos en el HTML.
+const num = (tenths: number) => String(tenths / 10).replace(/^(-?)0\./, '$1.');
+
+// Anillos ligeramente irregulares, como surcos hechos a mano. Coordenadas relativas (`l`) calculadas sobre puntos
+// ya redondeados, así el redondeo no se acumula y el anillo cierra donde empezó.
 const ring = (r: number, i: number) => {
   const points = 72;
   let d = '';
-  for (let p = 0; p <= points; p++) {
+  let px = 0;
+  let py = 0;
+  for (let p = 0; p < points; p++) {
     const a = (p / points) * Math.PI * 2;
     const wobble = 1 + Math.sin(a * 3 + i * 0.7) * 0.012 + Math.cos(a * 5 + i) * 0.008;
-    const x = c + Math.cos(a) * r * wobble;
-    const y = c + Math.sin(a) * r * wobble;
-    d += `${p === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`;
+    const x = Math.round((c + Math.cos(a) * r * wobble) * 10);
+    const y = Math.round((c + Math.sin(a) * r * wobble) * 10);
+    d += p === 0 ? `M${num(x)} ${num(y)}` : `l${num(x - px)} ${num(y - py)}`;
+    px = x;
+    py = y;
   }
   return d + 'Z';
 };

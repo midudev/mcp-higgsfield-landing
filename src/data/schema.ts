@@ -1,11 +1,7 @@
-import { contacto, experiencias, faqs, fotosPublicas, links, maridaje, platos, seo } from './arko';
+import { contacto, experiencias, faqs, links, maridaje, platos, seo } from './arko';
+import { fotosPublicas, ogImage } from './imagenes';
 
 const WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-export const ogImage = {
-  src: '/og-image.jpg',
-  alt: 'Arko: cocina japonesa con alma mediterránea, junto a la entrada del restaurante',
-};
 
 export interface PageImage {
   loc: string;
@@ -54,7 +50,8 @@ export function structuredData(site: URL) {
         name: 'Arko',
         alternateName: ['Arko Restaurant', 'Arko Barcelona'],
         slogan: 'Cocina japonesa con alma mediterránea',
-        description: seo.description,
+        description:
+          'Cocina japonesa con alma mediterránea y herencia peruana. Sushi, nigiri y cocina nikkei en el Eixample de Barcelona.',
         url: home,
         image: [
           shareImage,
@@ -62,11 +59,11 @@ export function structuredData(site: URL) {
             .slice(0, 4)
             .map((photo) => ({ '@type': 'ImageObject', url: photo.loc, caption: photo.caption })),
         ],
-        logo: abs(site, '/apple-touch-icon.png'),
+        logo: abs(site, '/icon-512.png'),
         telephone,
         email: contacto.email,
         priceRange: '€€€',
-        servesCuisine: ['Nikkei', 'Japonesa'],
+        servesCuisine: ['Japonesa', 'Nikkei', 'Mediterránea'],
         currenciesAccepted: 'EUR',
         acceptsReservations: true,
         menu: links.carta,
@@ -109,7 +106,7 @@ export function structuredData(site: URL) {
           streetAddress: contacto.calle,
           postalCode: contacto.codigoPostal,
           addressLocality: contacto.localidad,
-          addressRegion: 'Catalunya',
+          addressRegion: 'Cataluña',
           addressCountry: 'ES',
         },
         geo: { '@type': 'GeoCoordinates', latitude: contacto.lat, longitude: contacto.lon },
@@ -121,15 +118,17 @@ export function structuredData(site: URL) {
           closes: '00:00',
         },
         contactPoint: { '@type': 'ContactPoint', telephone, contactType: 'reservations' },
-        sameAs: [links.instagram, 'https://www.arkorestaurant.com/es/'],
+        sameAs: [links.instagram, 'https://www.arkorestaurant.com/'],
         mainEntityOfPage: { '@id': webpageId },
         potentialAction: {
           '@type': 'ReserveAction',
           target: {
             '@type': 'EntryPoint',
             urlTemplate: links.reservar,
+            inLanguage: 'es',
             actionPlatform: ['https://schema.org/DesktopWebPlatform', 'https://schema.org/MobileWebPlatform'],
           },
+          result: { '@type': 'FoodEstablishmentReservation', name: 'Reserva de mesa en Arko' },
         },
       },
       {
