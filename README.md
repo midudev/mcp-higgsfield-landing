@@ -1,6 +1,11 @@
 # Arko · Landing con scroll world
 
-![Arko: cocina japonesa con alma mediterránea, junto a la entrada del restaurante](public/og-image.jpg)
+<a href="https://arko-sushi.midudev.workers.dev">
+  <picture>
+    <source srcset="https://raw.githubusercontent.com/midudev/mcp-higgsfield-landing/main/docs/scroll-desktop.avif" type="image/avif">
+    <img src="public/og-image.jpg" alt="Scroll por la landing de Arko en escritorio: el paseo por el local avanza con el scroll y después aparecen los platos, las experiencias, las preguntas frecuentes y el pie">
+  </picture>
+</a>
 
 Landing de [Arko](https://www.arkorestaurant.com), restaurante de cocina nikkei en Carrer Enric Granados 63, en el Eixample de Barcelona. Está publicada en **[arko-sushi.midudev.workers.dev](https://arko-sushi.midudev.workers.dev)**.
 
