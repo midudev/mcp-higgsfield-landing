@@ -8,24 +8,16 @@ import Experiences from '../components/Experiences.astro';
 import Faq from '../components/Faq.astro';
 import Gift from '../components/Gift.astro';
 import FinalCta from '../components/FinalCta.astro';
-import { faqs } from '../data/arko';
+import { seo } from '../data/arko';
+import { structuredData } from '../data/schema';
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map((faq) => ({
-    '@type': 'Question',
-    name: faq.pregunta,
-    acceptedAnswer: { '@type': 'Answer', text: faq.respuesta },
-  })),
-};
+const site = Astro.site;
+if (!site) throw new Error('Falta site en astro.config.mjs');
+const jsonLd = JSON.stringify(structuredData(site)).replaceAll('<', '\\u003c');
 ---
 
-<Layout
-  title="Arko · Cocina nikkei en el Eixample, Barcelona"
-  description="Cocina japonesa con alma mediterránea y herencia peruana en Enric Granados 63. Menús para dos desde 150 €. Todos los días de 13:00 a 00:00."
->
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+<Layout title={seo.title} description={seo.description}>
+  <script slot="head" type="application/ld+json" set:html={jsonLd} />
   <ScrollWorld />
   <Tagline />
   <Dishes />

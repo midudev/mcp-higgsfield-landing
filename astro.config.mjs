@@ -5,8 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  // PENDIENTE: confirmar el dominio final de la landing (canonical, og:image, JSON-LD).
-  site: 'https://www.arkorestaurant.com',
+  // URL real de esta landing. Canónica, sitemap, og:image y JSON-LD salen de aquí.
+  site: 'https://arko-sushi.midudev.workers.dev',
   // Fuentes servidas desde el propio dominio, recortadas a latin con pyftsubset
   // (las originales son japonesas y pesan varios MB). Licencias OFL junto a los archivos.
   fonts: [

@@ -1,7 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { contacto, legal, links } from '../data/arko';
+import { contacto, legal, links, nav } from '../data/arko';
 
 const year = new Date().getFullYear();
 ---
@@ -11,11 +11,24 @@ const year = new Date().getFullYear();
     <div class="flex flex-col gap-4">
       <Logo class="h-6 w-auto self-start text-crema" />
       <p class="max-w-xs text-sm text-crema/70">Cocina japonesa con alma mediterránea en el Eixample de Barcelona.</p>
+      <nav aria-label="Secciones">
+        <ul class="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+          {
+            nav.map((item) => (
+              <li>
+                <a href={`/${item.href}`} class="link">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
     </div>
 
     <div class="flex flex-col gap-2 text-sm">
       <h2 class="font-sans text-xs tracking-widest text-crema/50 uppercase">Visítanos</h2>
-      <p>{contacto.calle}<br />{contacto.ciudad}</p>
+      <address>{contacto.calle}<br />{contacto.ciudad}</address>
       <a href={links.maps} class="link inline-flex items-center gap-2 self-start" rel="noopener" target="_blank">
         <Icon name="mapPin" />
         Cómo llegar

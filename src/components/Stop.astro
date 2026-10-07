@@ -5,7 +5,8 @@ import { paseo } from '../data/arko';
 // mientras la cámara avanza y sale empujado por la parada siguiente.
 interface Props {
   index: number;
-  eyebrow: string;
+  /** Sin eyebrow, la parada lo pone dentro de su propio titular (la entrada lo mete en el h1). */
+  eyebrow?: string;
   spy?: string;
 }
 
@@ -29,7 +30,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <span aria-hidden="true" class="size-1 rounded-full bg-teja"></span>
       <span>{parada.lugar}</span>
     </p>
-    <p class="mt-4 text-xs font-medium tracking-widest text-teja uppercase">{eyebrow}</p>
+    {eyebrow && <p class="mt-4 text-xs font-medium tracking-widest text-teja uppercase">{eyebrow}</p>}
     <slot />
   </div>
 </article>

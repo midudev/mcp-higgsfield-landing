@@ -4,7 +4,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import LogoSymbol from '../components/LogoSymbol.astro';
-import { contacto, links } from '../data/arko';
+import { ogImage } from '../data/schema';
 
 interface Props {
   title: string;
@@ -15,69 +15,59 @@ interface Props {
 
 const { title, description, noindex = false, header = true } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL('/og.jpg', Astro.site);
-
-const restaurant = {
-  '@context': 'https://schema.org',
-  '@type': 'Restaurant',
-  name: 'Arko Restaurant',
-  url: Astro.site?.href,
-  image: ogImage.href,
-  telephone: '+34938299572',
-  email: contacto.email,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: contacto.calle,
-    postalCode: '08008',
-    addressLocality: 'Barcelona',
-    addressCountry: 'ES',
-  },
-  servesCuisine: ['Japonesa', 'Nikkei'],
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-      opens: '13:00',
-      closes: '00:00',
-    },
-  ],
-  acceptsReservations: links.reservar,
-  hasMenu: links.carta,
-  sameAs: [links.instagram],
-};
+const ogUrl = new URL(ogImage.src, Astro.site);
+const robots = noindex
+  ? 'noindex, follow'
+  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es-ES">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script is:inline>document.documentElement.classList.add('js');</script>
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <meta name="robots" content={robots} />
     <meta name="theme-color" content="#131209" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    {
+      !noindex && (
+        <>
+          <link rel="canonical" href={canonical} />
+          <link rel="alternate" hreflang="es-ES" href={canonical} />
+          <link rel="alternate" hreflang="x-default" href={canonical} />
+        </>
+      )
+    }
 
-    <meta property="og:type" content="restaurant" />
+    <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_ES" />
     <meta property="og:site_name" content="Arko Restaurant" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:secure_url" content={ogUrl} />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Comedor de Arko con un cerezo en flor bajo una bóveda blanca" />
+    <meta property="og:image:alt" content={ogImage.alt} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:url" content={canonical} />
+    <meta name="twitter:image" content={ogUrl} />
+    <meta name="twitter:image:alt" content={ogImage.alt} />
 
     <Font cssVariable="--font-hina" preload />
     <Font cssVariable="--font-zen" preload />
 
-    <script type="application/ld+json" set:html={JSON.stringify(restaurant)} />
     <slot name="head" />
   </head>
   <body class="min-h-svh overflow-x-clip">

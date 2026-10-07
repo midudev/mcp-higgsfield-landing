@@ -97,11 +97,17 @@ const pill = 'rounded-full bg-bg/40 px-3 py-1 ring-1 ring-crema/20 backdrop-blur
 
   <!-- Paradas: cada una deja su texto abajo a la izquierda mientras el paseo avanza. -->
   <div class="relative z-10 -mt-[100lvh]">
-    <Stop index={0} eyebrow="Enric Granados 63 · Eixample, Barcelona" spy="#inicio">
-      <h1
-        class="hero-title mt-4 max-w-[680px] bg-linear-to-r from-crema to-[#b3a894] bg-clip-text pb-2 text-4xl text-transparent lg:text-6xl"
-      >
-        Cocina japonesa<br /> con alma mediterránea
+    <Stop index={0} spy="#inicio">
+      <!-- La marca y el barrio van dentro del h1 para que el titular principal diga qué es y dónde está. -->
+      <h1 class="mt-4">
+        <span class="block font-sans text-xs font-medium tracking-widest text-teja uppercase">
+          Arko · Nikkei en el Eixample, Barcelona
+        </span>
+        <span
+          class="hero-title mt-4 block max-w-[680px] bg-linear-to-r from-crema to-[#b3a894] bg-clip-text pb-2 text-4xl text-transparent lg:text-6xl"
+        >
+          Cocina japonesa<br /> con alma mediterránea
+        </span>
       </h1>
       <p class={body}>
         La disciplina japonesa dialoga con el producto mediterráneo y la herencia peruana. Cocina nikkei, todos los días

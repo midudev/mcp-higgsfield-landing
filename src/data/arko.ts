@@ -20,6 +20,52 @@ import poster6 from '../assets/paseo/paseo-6.webp';
 
 export const photos = { entrada, lateralEntrada, mesaEspecial, mesas, barra, barraLateral, vinos };
 
+export const seo = {
+  title: 'Arko Barcelona · Restaurante nikkei en el Eixample',
+  description:
+    'Restaurante nikkei en Enric Granados 63, Eixample, Barcelona. Experiencias para dos desde 150 €. Abierto todos los días de 13:00 a 00:00. Reserva tu mesa.',
+};
+
+// Las mismas fotos del local en JPG con URL fija en public/photos: el sitemap de imágenes y el JSON-LD necesitan
+// direcciones estables, no las que genera astro:assets en cada build.
+export const fotosPublicas = [
+  {
+    src: '/photos/0-entrada.jpg',
+    lugar: 'La entrada',
+    alt: 'La entrada de Arko: un cerezo en flor sobre la puerta de cristal, ventanas ovaladas y mesas de nogal',
+  },
+  {
+    src: '/photos/1-lateral-entrada.jpg',
+    lugar: 'Los espejos',
+    alt: 'Pared de espejos de borde orgánico junto a una ventana ovalada, con sillas tapizadas y alfombra índigo y naranja',
+  },
+  {
+    src: '/photos/2-mesa-especial.jpg',
+    lugar: 'La mesa redonda',
+    alt: 'Reservado redondo de cuero bajo una lámpara colgante, con plantas y un bonsái en una tinaja blanca',
+  },
+  {
+    src: '/photos/3-mesas.jpg',
+    lugar: 'La sala',
+    alt: 'Comedor largo con mesas de nogal, espejos ovalados en la pared y arcos de yeso',
+  },
+  {
+    src: '/photos/4-barra.jpg',
+    lugar: 'La barra de sushi',
+    alt: 'La barra con espirales de arena talladas, una ola de yeso iluminada encima y ramas de cerezo en el techo',
+  },
+  {
+    src: '/photos/5-barra-lateral.jpg',
+    lugar: 'La barra',
+    alt: 'El reservado de mimbre junto a un cerezo rosa y la barra de espirales, bajo un techo con el dibujo de la alfombra',
+  },
+  {
+    src: '/photos/6-vinos.jpg',
+    lugar: 'Los vinos',
+    alt: 'El pasillo de las vitrinas de vino de Arko, con una puerta de espejo al fondo',
+  },
+];
+
 // Paseo por Arko (scroll world): un clip 16:9 sin audio por tramo, que avanza o retrocede con el scroll.
 // Mientras el clip de un tramo no ha cargado se ve su primer fotograma (`poster`).
 // Para que el scrub sea fluido, cada clip necesita keyframes muy seguidos. El color va marcado como BT.709 con curva
@@ -103,6 +149,11 @@ export const links = {
 export const contacto = {
   calle: 'Carrer Enric Granados 63',
   ciudad: '08008 Barcelona',
+  codigoPostal: '08008',
+  localidad: 'Barcelona',
+  barrio: 'Eixample',
+  lat: 41.3910158,
+  lon: 2.1579108,
   telefono: '+34 938 29 95 72',
   email: 'hola@arkorestaurant.com',
   instagram: '@arko.barcelona',
@@ -167,6 +218,11 @@ export type Faq = { pregunta: string; respuesta: string; pending?: string };
 
 export const faqs: Faq[] = [
   {
+    pregunta: '¿Qué es Arko?',
+    respuesta:
+      'Arko es un restaurante de cocina nikkei en Carrer Enric Granados 63, 08008 Barcelona, en el Eixample. La técnica japonesa se encuentra con el producto mediterráneo y la herencia peruana.',
+  },
+  {
     pregunta: '¿Qué es la cocina nikkei?',
     respuesta:
       'Es la cocina que nace del encuentro entre Japón y Perú. En Arko unimos la técnica japonesa y la herencia peruana con el producto del mar y del mercado mediterráneo.',
@@ -188,12 +244,13 @@ export const faqs: Faq[] = [
     pending: 'Validar con el restaurante la redacción sobre alergias.',
   },
   {
-    pregunta: '¿Qué horario tenéis?',
+    pregunta: '¿Qué horario tiene Arko?',
     respuesta: 'Abrimos de lunes a domingo, de 13:00 a 00:00. La cocina sirve hasta las 23:00.',
   },
   {
-    pregunta: '¿Dónde estáis?',
-    respuesta: 'En Carrer Enric Granados 63, 08008 Barcelona, en el corazón del Eixample.',
+    pregunta: '¿Dónde está Arko?',
+    respuesta:
+      'En Carrer Enric Granados 63, 08008 Barcelona, en el corazón del Eixample. Reserva online o llama al +34 938 29 95 72.',
   },
   {
     pregunta: '¿Hacéis grupos o eventos privados?',
